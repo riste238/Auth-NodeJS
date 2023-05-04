@@ -3,7 +3,7 @@
         "username": "Stojan",
         "roles": {
             "User": 2001,
-            "Editor": 1984
+            "Editor": 1984 
         },
         "password": "$2b$10$SOhag1ZfwxKeVhgZgIh/CeSyQJGFl/dH9drudH6mtLfEO05VnMf/S",
         "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlN0b2phbiIsImlhdCI6MTY4MzE5NjIxNSwiZXhwIjoxNjgzMjgyNjE1fQ.UoSsTsnOycCuOOBpHh06popuRrD28dcLFAvM2nTNcq4"
