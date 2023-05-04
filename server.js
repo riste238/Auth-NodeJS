@@ -8,14 +8,17 @@ const { ObjectId } = require('mongodb');
 // const router = require('./route/route.js')
 const cookieParser = require('cookie-parser')
 const verifyJWT = require('./middleware/verifyJWT.js')
+const credentials = require('./middleware/credentials.js')
+const corsOptions = require('./config/corsOptions.js')
 
 
 const app = express()
 
 // app.use(bodyParser.urlencoded({ extended: true }))
 // app.use(bodyParser.json());
+app.use(credentials)
 app.use(express.urlencoded({ extended: true }))
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(cookieParser());
 app.use(express.json())
 app.set('view engine', 'ejs')
@@ -133,3 +136,20 @@ app.use('/logout', require('./route/logout.js'))
 
 app.use(verifyJWT)
 app.use('/employee', require('./route/route.js'))
+
+
+// dejan - pass - deki
+//  stojan - pass - stole
+//  riste - pass -
+
+
+  // {
+    //     "username": "Riste",
+    //     "roles": {
+    //         "User": 2001,
+    //         "Editor": 1984,
+    //         "Admin": 5150
+    //     },
+    //     "password": "$2b$10$F58BOo1yY3eoJZwm6s9E7eJHjNtJnpAgTIhiYolQfXYegihTL6G.2",
+    //     "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJpc3RlIiwiaWF0IjoxNjgzMTk2MTEyLCJleHAiOjE2ODMyODI1MTJ9.clYZGy0OoTJ7rJHrTOyEIYlgCizOCbMb28iA_NnQZPw"
+    // },

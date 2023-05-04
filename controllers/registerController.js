@@ -22,7 +22,13 @@ const handleUser = async (req, res) => {
         // bcrypt -> is asynchronous call back function, what receive a lot of requests. It's a c++ funciton, so that means, it's executing in c++ through LIBUV library
 
         const handlePassword = await bcrypt.hash(password, 10);
-        const newUser = { "username": username, "password": handlePassword }
+        const newUser = {
+             "username": username, 
+             "roles": {
+                "User": 2001
+             },
+             "password": handlePassword
+             }
         userDB.setUsers([...userDB.users, newUser]);
 
         await fsPromises.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(userDB.users), 'utf8' , '\n');

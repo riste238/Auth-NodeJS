@@ -3,8 +3,8 @@ require('dotenv').config()
 
 const verifyToken =  (req, res, next) => {
 
-    const authorization = req.headers['authorization']
-    if (!authorization) { return res.sendStatus(401) }
+    const authorization = req.headers.authorization || req.headers.Authorization;
+    if (!authorization?.startsWith('Bearer') ) { return res.sendStatus(401) }
 
     const token = authorization.split(' ')[1];
 
@@ -14,7 +14,8 @@ const verifyToken =  (req, res, next) => {
         (err, decoded) => {
             if (err) return res.sendStatus(403) //Invalid token
 
-            req.username = decoded.username
+            req.username = decoded.UserInfo.username,
+            req.roles = decoded.UserInfo.roles
             next()
         }
     )

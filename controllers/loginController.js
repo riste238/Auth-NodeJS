@@ -30,8 +30,15 @@ const loginHandle = async (req, res) => {
     const match = await bcrypt.compare(password, findUser.password)
     if (match) {
 
+        const roles = Object.values(findUser.roles);
+
         const accessToken = jwt.sign(
-            { "username": findUser.username },
+            {
+                "UserInfo": {
+                    "username": findUser.username,
+                    "roles": roles // unities od role property 2001 / 1984  or 5001 will be received together with username.
+                }
+        },
             process.env.ACCESS_TOKEN,
             { 'expiresIn': '30s' })
 
@@ -47,7 +54,7 @@ const loginHandle = async (req, res) => {
 
         await fsPromises.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(userDB.users), 'utf-8');
 
-        await res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+        await res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 })
         await res.status(200).json({ accessToken })
 
     }

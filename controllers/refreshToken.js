@@ -17,6 +17,8 @@ const handleRefreshToken = async (req, res) => {
     const foundUser = userDB.users.find(user => user.refreshToken === refreshToken)
     if (!foundUser) { return res.status(403) }
 
+    const roles = Object.values(foundUser.roles);
+
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN,
@@ -24,7 +26,12 @@ const handleRefreshToken = async (req, res) => {
             if (err || foundUser.username !== decoded.username) { return res.sendStatus(403) }
 
             const accessToken = jwt.sign(
-                { "username": decoded.username },
+                { 
+                    "UserInfo": {
+                      "username": decoded.username,
+                      "roles": roles
+                    }
+                 },
                 process.env.ACCESS_TOKEN,
                 { 'expiresIn': '30s' }
             )
