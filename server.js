@@ -137,7 +137,7 @@ app.use('/logout', require('./route/logout.js'))
 app.use(verifyJWT)
 app.use('/employee', require('./route/route.js'))
 
-
+console.log('Hey');
 // dejan - pass - deki
 //  stojan - pass - stole
 //  riste - pass -
