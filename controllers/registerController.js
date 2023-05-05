@@ -1,7 +1,8 @@
-const userDB = {
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-}
+// const userDB = {
+//     users: require('../model/users.json'),
+//     setUsers: function (data) { this.users = data }
+// }
+const User = require('../model/User.js');
 
 const fsPromises = require('fs').promises;
 const bcrypt = require('bcrypt');
@@ -13,8 +14,8 @@ const handleUser = async (req, res) => {
     if (!username || !password) {
         return res.status(400).json({ message: 'Username & password are required!' })
     }
-
-    const duplicate = userDB.users.find(user => user.username === username);
+    const duplicate = await User.findOne({username: username}).exec()
+    // const duplicate = userDB.users.find(user => user.username === username);
     if (duplicate) { return res.status(409) }
 
     try {
@@ -22,16 +23,21 @@ const handleUser = async (req, res) => {
         // bcrypt -> is asynchronous call back function, what receive a lot of requests. It's a c++ funciton, so that means, it's executing in c++ through LIBUV library
 
         const handlePassword = await bcrypt.hash(password, 10);
-        const newUser = {
-             "username": username, 
-             "roles": {
-                "User": 2001
-             },
-             "password": handlePassword
-             }
-        userDB.setUsers([...userDB.users, newUser]);
+        // const newUser = {
+        //      "username": username, 
+        //      "roles": {
+        //         "User": 2001
+        //      },
+        //      "password": handlePassword
+        //      }
 
-        await fsPromises.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(userDB.users), 'utf8' , '\n');
+        const newUser = await User.create({
+            username: username,
+            password: handlePassword
+        })
+            console.log(newUser);
+
+        // await fsPromises.writeFile(path.join(__dirname, '..', 'model', 'users.json'), JSON.stringify(userDB.users), 'utf8' , '\n');
 
         res.status(201).json({ "succes": `New user is created ${newUser.username}` })
     }

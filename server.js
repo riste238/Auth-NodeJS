@@ -10,6 +10,42 @@ const cookieParser = require('cookie-parser')
 const verifyJWT = require('./middleware/verifyJWT.js')
 const credentials = require('./middleware/credentials.js')
 const corsOptions = require('./config/corsOptions.js')
+// const connectDB = require('./config/dbConfig.js')
+// Connect to MongoDB
+
+const connectDB = async () => {
+    // try {
+    await mongoose.connect(process.env.URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+
+        .then(() => {
+            console.log(`I connected to a database!`);
+            app.listen(PORT, () => {
+                console.log(`Listening to port ${PORT}`);
+            })
+        })
+        .catch((err) => {
+            console.log(`Mongo DB is fails,the reason is this one ${err}`);
+        })
+
+    // }
+    // catch (err) {
+    //     console.error(err.message);
+    // }
+}
+
+connectDB()
+
+
+// mongoose.connection.once('once', () => {
+//   console.log('Connected to MongoDB');
+
+//   app.listen(PORT, () => {
+//     console.log(`Listening to port ${PORT}`);
+//   })
+// })  
 
 
 const app = express()
@@ -124,9 +160,6 @@ app.set('view engine', 'ejs')
 //     // .catch((err) => {res.status(500).json({message: err.message})})
 // })
 
-app.listen(PORT, () => {
-    console.log(`Listening to port ${PORT}`);
-})
 
 
 app.use('/register', require('./route/register.js'))
@@ -134,22 +167,20 @@ app.use('/login', require('./route/login.js'))
 app.use('/restart', require('./route/refresh.js'))
 app.use('/logout', require('./route/logout.js'))
 
+// ovde e neccessary needed verifyJWT token for successfuly call anyone API CALL!!!
+// try to change their place with each other and try again to call some API
 app.use(verifyJWT)
 app.use('/employee', require('./route/route.js'))
+app.use('/user', require('./route/api/users.js'))
 
-console.log('riki');
-// dejan - pass - deki
-//  stojan - pass - stole
-//  riste - pass -
+// {
+//     "username": "Riste",
+//     "roles": {
+//         "User": 2001,
+//         "Editor": 1984,
+//         "Admin": 5150
+//     },
+//     "password": "$2b$10$F58BOo1yY3eoJZwm6s9E7eJHjNtJnpAgTIhiYolQfXYegihTL6G.2",
+//     "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJpc3RlIiwiaWF0IjoxNjgzMTk2MTEyLCJleHAiOjE2ODMyODI1MTJ9.clYZGy0OoTJ7rJHrTOyEIYlgCizOCbMb28iA_NnQZPw"
+// },
 
-
-  // {
-    //     "username": "Riste",
-    //     "roles": {
-    //         "User": 2001,
-    //         "Editor": 1984,
-    //         "Admin": 5150
-    //     },
-    //     "password": "$2b$10$F58BOo1yY3eoJZwm6s9E7eJHjNtJnpAgTIhiYolQfXYegihTL6G.2",
-    //     "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJpc3RlIiwiaWF0IjoxNjgzMTk2MTEyLCJleHAiOjE2ODMyODI1MTJ9.clYZGy0OoTJ7rJHrTOyEIYlgCizOCbMb28iA_NnQZPw"
-    // },

@@ -1,10 +1,12 @@
-const userDB = {
-    users: require('../model/users.json'),
-    setUser: function (data) { this.users = data }
-}
+// const userDB = {
+//     users: require('../model/users.json'),
+//     setUser: function (data) { this.users = data }
+// }
+
+const User = require('../model/User.js');
 
 const jwt = require('jsonwebtoken')
-require('dotenv').config()
+// require('dotenv').config()
 
 
 const handleRefreshToken = async (req, res) => {
@@ -12,9 +14,12 @@ const handleRefreshToken = async (req, res) => {
     if (!cookies?.jwt) { return res.status(401) }
 
     const refreshToken = cookies.jwt;
+    
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
 
 
-    const foundUser = userDB.users.find(user => user.refreshToken === refreshToken)
+    const foundUser = await User.findOne({refreshToken}).exec()
+    // const foundUser = userDB.users.find(user => user.refreshToken === refreshToken)
     if (!foundUser) { return res.status(403) }
 
     const roles = Object.values(foundUser.roles);
